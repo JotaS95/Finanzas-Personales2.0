@@ -234,9 +234,21 @@ const UIManager = {
             error:   "linear-gradient(135deg, #ef233c, #c9184a)",
             info:    "linear-gradient(135deg, #4361ee, #3a0ca3)"
         };
+
+        // Las alertas de presupuesto (info/error) duran más (8s), las de éxito menos (4s)
+        const duracion = (tipo === "success") ? 4000 : 8000;
+
         Toastify({
-            text: mensaje, duration: 3000, gravity: "top", position: "right",
-            style: { background: colores[tipo] || colores.success, borderRadius: "10px", fontSize: "14px", fontFamily: "'Outfit', sans-serif" }
+            text: mensaje, 
+            duration: duracion, 
+            gravity: "top", 
+            position: "right",
+            style: { 
+                background: colores[tipo] || colores.success, 
+                borderRadius: "10px", 
+                fontSize: "14px", 
+                fontFamily: "'Outfit', sans-serif" 
+            }
         }).showToast();
     },
 
