@@ -3,7 +3,8 @@
  */
 
 const StorageManager = {
-    // Claves dinámicas por usuario
+    USUARIOS_KEY: "billetera_usuarios_lista",
+
     getKeys(usuario) {
         return {
             TRANSACCIONES: `billetera_${usuario}_transacciones`,
@@ -11,9 +12,7 @@ const StorageManager = {
         };
     },
 
-    USUARIOS_KEY: "billetera_usuarios_lista",
-
-    // Guardar / recuperar lista de usuarios
+    // Lista de usuarios
     obtenerUsuarios() {
         const data = localStorage.getItem(this.USUARIOS_KEY);
         return data ? JSON.parse(data) : [];
@@ -27,31 +26,36 @@ const StorageManager = {
         }
     },
 
+    // Eliminar un usuario y todos sus datos
+    eliminarUsuario(usuario) {
+        const keys = this.getKeys(usuario);
+        localStorage.removeItem(keys.TRANSACCIONES);
+        localStorage.removeItem(keys.PRESUPUESTO);
+        const lista = this.obtenerUsuarios().filter(u => u !== usuario);
+        localStorage.setItem(this.USUARIOS_KEY, JSON.stringify(lista));
+    },
+
     // Transacciones por usuario
     guardarTransacciones(usuario, lista) {
-        const keys = this.getKeys(usuario);
-        localStorage.setItem(keys.TRANSACCIONES, JSON.stringify(lista));
+        localStorage.setItem(this.getKeys(usuario).TRANSACCIONES, JSON.stringify(lista));
     },
 
     obtenerTransacciones(usuario) {
-        const keys = this.getKeys(usuario);
-        const data = localStorage.getItem(keys.TRANSACCIONES);
+        const data = localStorage.getItem(this.getKeys(usuario).TRANSACCIONES);
         return data ? JSON.parse(data) : [];
     },
 
     // Presupuesto por usuario
     guardarPresupuesto(usuario, valor) {
-        const keys = this.getKeys(usuario);
-        localStorage.setItem(keys.PRESUPUESTO, valor.toString());
+        localStorage.setItem(this.getKeys(usuario).PRESUPUESTO, valor.toString());
     },
 
     obtenerPresupuesto(usuario) {
-        const keys = this.getKeys(usuario);
-        const data = localStorage.getItem(keys.PRESUPUESTO);
+        const data = localStorage.getItem(this.getKeys(usuario).PRESUPUESTO);
         return data ? parseFloat(data) : 0;
     },
 
-    // Limpiar datos del usuario actual
+    // Limpiar solo datos del usuario (no la cuenta)
     limpiarUsuario(usuario) {
         const keys = this.getKeys(usuario);
         localStorage.removeItem(keys.TRANSACCIONES);

@@ -7,16 +7,14 @@ const App = {
     transacciones: [],
     presupuesto: 0,
 
-    // Inicializar la aplicación
     async iniciar() {
-        // Mostrar usuarios existentes en el login
         const usuarios = StorageManager.obtenerUsuarios();
-        UIManager.renderizarUsuarios(usuarios);
+        UIManager.renderizarUsuarios(usuarios,
+            (u) => this.seleccionarUsuario(u),
+            (u) => this.confirmarEliminarUsuario(u)
+        );
 
-        // Configurar el botón de login
         document.getElementById("btn-ingresar").onclick = () => this.login();
-
-        // Permitir Enter en el campo de usuario
         document.getElementById("input-login-usuario").onkeydown = (e) => {
             if (e.key === "Enter") this.login();
         };
@@ -31,25 +29,24 @@ const App = {
             return;
         }
 
+        this.seleccionarUsuario(nombre);
+    },
+
+    seleccionarUsuario(nombre) {
         this.usuario = nombre;
         StorageManager.registrarUsuario(nombre);
-
-        // Cargar datos del usuario
         this.cargarDatosUsuario();
     },
 
     async cargarDatosUsuario() {
-        // Cargar datos asíncronos + datos del storage
         await this.cargarCategorias();
 
         this.transacciones = StorageManager.obtenerTransacciones(this.usuario);
         this.presupuesto = StorageManager.obtenerPresupuesto(this.usuario);
 
-        // Mostrar la app
         UIManager.mostrarApp(this.usuario);
-        UIManager.notificar(`¡Bienvenido, ${this.usuario}!`, "info");
+        UIManager.notificar(`¡Bienvenido, ${this.usuario}! 👋`, "info");
 
-        // Configurar eventos
         this.configurarEventos();
         this.actualizarUI();
     },
@@ -68,16 +65,9 @@ const App = {
     },
 
     configurarEventos() {
-        // Formulario principal
         document.getElementById("formulario-gastos").onsubmit = (e) => this.procesarNuevaTransaccion(e);
-
-        // Presupuesto
         document.getElementById("btn-guardar-presupuesto").onclick = () => this.cambiarPresupuesto();
-
-        // Logout
         document.getElementById("btn-cerrar-sesion").onclick = () => this.cerrarSesion();
-
-        // Reiniciar datos
         document.getElementById("btn-reiniciar-todo").onclick = () => this.reiniciarDatos();
     },
 
@@ -88,7 +78,6 @@ const App = {
         const monto = parseFloat(document.getElementById("input-monto").value);
         const tipo = document.getElementById("select-tipo").value;
 
-        // Validaciones (sugeridas por el tutor)
         if (descripcion === "") {
             UIManager.notificar("La descripción no puede estar vacía", "error");
             return;
@@ -100,7 +89,7 @@ const App = {
         }
 
         const nueva = {
-            id: Date.now(),
+            id: Date.now(),      // timestamp también sirve como fecha/hora
             descripcion: descripcion,
             monto: monto,
             tipo: tipo
@@ -115,6 +104,7 @@ const App = {
 
     cambiarPresupuesto() {
         const valor = parseFloat(document.getElementById("input-presupuesto").value);
+
         if (!isNaN(valor) && valor >= 0) {
             this.presupuesto = valor;
             StorageManager.guardarPresupuesto(this.usuario, this.presupuesto);
@@ -153,13 +143,33 @@ const App = {
         );
     },
 
+    confirmarEliminarUsuario(nombre) {
+        UIManager.confirmarAccion(
+            `¿Eliminar usuario "${nombre}"?`,
+            "Se borrarán todos sus datos y el historial. Esta acción no se puede deshacer.",
+            () => {
+                StorageManager.eliminarUsuario(nombre);
+                UIManager.notificar(`Usuario "${nombre}" eliminado`, "error");
+                // Refrescar los chips
+                const usuarios = StorageManager.obtenerUsuarios();
+                UIManager.renderizarUsuarios(usuarios,
+                    (u) => this.seleccionarUsuario(u),
+                    (u) => this.confirmarEliminarUsuario(u)
+                );
+            }
+        );
+    },
+
     cerrarSesion() {
         this.usuario = null;
         this.transacciones = [];
         this.presupuesto = 0;
         document.getElementById("input-login-usuario").value = "";
         const usuarios = StorageManager.obtenerUsuarios();
-        UIManager.renderizarUsuarios(usuarios);
+        UIManager.renderizarUsuarios(usuarios,
+            (u) => this.seleccionarUsuario(u),
+            (u) => this.confirmarEliminarUsuario(u)
+        );
         UIManager.mostrarLogin();
     },
 

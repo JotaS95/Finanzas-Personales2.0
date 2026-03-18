@@ -128,18 +128,37 @@ body {
 .usuarios-chips { display: flex; flex-wrap: wrap; gap: 8px; }
 
 .chip-usuario {
-    padding: 6px 14px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 10px 6px 14px;
     background: var(--primary-light);
     border: 1px solid transparent;
     border-radius: 20px;
     color: var(--primary);
     font-size: 0.85rem;
     font-weight: 500;
-    cursor: pointer;
     transition: all 0.2s;
-    font-family: inherit;
 }
-.chip-usuario:hover { background: var(--primary); color: white; }
+.chip-usuario span { cursor: pointer; }
+.chip-usuario:hover { background: #dde3fb; }
+
+.chip-del {
+    background: transparent;
+    border: none;
+    color: var(--primary);
+    cursor: pointer;
+    font-size: 0.8rem;
+    line-height: 1;
+    padding: 2px 4px;
+    border-radius: 50%;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0.5;
+}
+.chip-del:hover { background: var(--danger); color: white; opacity: 1; }
 
 /* ===== APP PRINCIPAL ===== */
 #app-screen { display: none; min-height: 100vh; }
@@ -365,7 +384,36 @@ input:focus, select:focus {
 
 .mov-info { flex: 1; }
 .mov-descripcion { font-weight: 600; font-size: 0.95rem; color: var(--text); }
-.mov-tipo { font-size: 0.72rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; margin-top: 2px; }
+.mov-meta {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: 2px;
+}
+.mov-tipo { font-size: 0.72rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; }
+.mov-hora { font-size: 0.72rem; color: var(--text-muted); }
+
+/* ===== ENCABEZADOS DE DÍA ===== */
+.dia-header {
+    padding: 6px 0 6px;
+    margin-top: 12px;
+    margin-bottom: 4px;
+}
+.dia-header:first-child { margin-top: 0; }
+.dia-label {
+    font-size: 0.78rem;
+    font-weight: 600;
+    text-transform: capitalize;
+    color: var(--text-muted);
+    letter-spacing: 0.3px;
+    padding: 4px 10px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+}
 
 .mov-monto { font-weight: 700; font-size: 0.95rem; }
 .ingreso .mov-monto { color: var(--success); }
