@@ -40,30 +40,34 @@ const UIManager = {
         contenedor.innerHTML = "";
 
         if (transacciones.length === 0) {
-            contenedor.innerHTML = `<p style="text-align:center; color:#b2bec3; margin-top:20px;">No hay movimientos aún.</p>`;
+            contenedor.innerHTML = `<div class="empty-state"><div class="icon">📝</div><p>No hay movimientos aún.</p></div>`;
             return;
         }
 
         transacciones.forEach(t => {
             const div = document.createElement("div");
-            div.className = `tarjeta tarjeta-${t.tipo}`;
+            div.className = `mov-card ${t.tipo}`; // "ingreso" o "gasto"
             
             const montoFormateado = this.formatearMoneda(t.monto);
-            const claseMonto = t.tipo === "gasto" ? "monto-gasto" : "monto-ingreso";
             const signo = t.tipo === "gasto" ? "-" : "+";
+            const icono = t.tipo === "gasto" ? "💸" : "💰";
 
             div.innerHTML = `
-                <div class="tarjeta-info">
-                    <strong>${t.descripcion}</strong>
-                    <span class="monto ${claseMonto}">${signo} ${montoFormateado}</span>
+                <div class="mov-icon">${icono}</div>
+                <div class="mov-info">
+                    <div class="mov-descripcion">${t.descripcion}</div>
+                    <div class="mov-meta">
+                        <span class="mov-tipo">${t.tipo}</span>
+                    </div>
                 </div>
-                <button class="btn-borrar" data-id="${t.id}">Borrar</button>
+                <div class="mov-monto">${signo} ${montoFormateado}</div>
+                <button class="btn-del" title="Borrar movimiento">🗑️</button>
             `;
 
             contenedor.appendChild(div);
 
             // Evento para borrar (usando delegation u objeto directo)
-            div.querySelector(".btn-borrar").onclick = () => onEliminar(t.id);
+            div.querySelector(".btn-del").onclick = () => onEliminar(t.id);
         });
     },
 

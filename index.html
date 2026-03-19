@@ -6,7 +6,7 @@
     <title>Billetera Virtual - Proyecto Final Silva</title>
     
     <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
     
     <!-- Toastify CSS -->
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
@@ -14,68 +14,79 @@
     <!-- Estilos Propios -->
     <link rel="stylesheet" href="css/estilos.css">
     
-    <!-- Librerías Externas (Se cargan primero) -->
+    <!-- Librerías Externas -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
 
-    <!-- Scripts propios (Sin Módulos - Cargados Secuencialmente) -->
+    <!-- Scripts propios -->
     <script defer src="js/storage.js"></script>
     <script defer src="js/ui.js"></script>
     <script defer src="js/main.js"></script>
 </head>
-<body>
-    <div class="app-container">
-        <header>
-            <h1>Mis Finanzas</h1>
-            <div class="balance-card">
-                <div class="balance-item">
-                    <span class="label">Presupuesto Inicial</span>
-                    <span id="presupuesto-valor" class="valor">$0.00</span>
-                </div>
-                <div class="balance-item main">
-                    <span class="label">Balance Actual</span>
-                    <span id="balance-valor" class="valor">$0.00</span>
-                </div>
-            </div>
-        </header>
+<body class="mesh-bg">
 
-        <main>
-            <!-- Configuración inicial -->
-            <section class="config-section card">
-                <h3>Configuración</h3>
-                <div class="input-group">
-                    <input type="number" id="input-presupuesto" placeholder="Ingresa tu presupuesto total">
-                    <button id="btn-guardar-presupuesto">Actualizar</button>
+    <div id="app-screen" style="display:block;">
+        <nav class="navbar">
+            <span class="navbar-brand">💼 Billetera Básica Pro</span>
+        </nav>
+
+        <div class="app-container">
+            <aside class="sidebar-historial">
+                <div class="sidebar-header">
+                    <p class="card-title" style="margin:0; border:none; padding:0;">📋 Historial</p>
                 </div>
-                <button id="btn-reiniciar-todo" class="btn-danger">Borrar Todos los Datos</button>
-            </section>
-
-            <!-- Formulario de Transacción -->
-            <section class="form-section card">
-                <h3>Nueva Transacción</h3>
-                <form id="formulario-gastos">
-                    <div class="input-group">
-                        <input type="text" id="input-descripcion" placeholder="Descripción (ej. Supermercado)" required>
-                    </div>
-                    <div class="input-group-row">
-                        <input type="number" id="input-monto" placeholder="Monto ($)" required>
-                        <select id="select-tipo">
-                            <option value="gasto">Gasto</option>
-                            <option value="ingreso">Ingreso</option>
-                        </select>
-                    </div>
-                    <button type="submit" class="btn-primary">Registrar Movimiento</button>
-                </form>
-            </section>
-
-            <!-- Historial de Movimientos -->
-            <section class="list-section">
-                <h3>Historial de Movimientos</h3>
-                <div id="contenedor-transacciones" class="history-container">
+                <div class="history-list" id="contenedor-transacciones">
                     <!-- Se llena dinámicamente -->
                 </div>
-            </section>
-        </main>
+            </aside>
+
+            <main class="main-content">
+                <div class="stats-grid">
+                    <div class="stat-card principal">
+                        <div class="stat-label">Balance Actual</div>
+                        <div class="stat-valor valor-neutro" id="balance-valor">$0</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">🏦</div>
+                        <div class="stat-label">Presupuesto</div>
+                        <div class="stat-valor" id="presupuesto-valor">$0</div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <p class="card-title">💰 Definir Presupuesto</p>
+                    <div class="form-row-presupuesto">
+                        <div style="flex:1">
+                            <input type="number" id="input-presupuesto" placeholder="Ingresa tu presupuesto total">
+                        </div>
+                        <button class="btn-secondary" id="btn-guardar-presupuesto">Actualizar</button>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <p class="card-title">＋ Nueva Transacción</p>
+                    <form id="formulario-gastos">
+                        <div class="form-row">
+                            <input type="text" id="input-descripcion" placeholder="Descripción (ej: Supermercado)" required>
+                        </div>
+                        <div class="form-row form-row-2">
+                            <div>
+                                <input type="number" id="input-monto" placeholder="Monto ($)" required>
+                            </div>
+                            <select id="select-tipo">
+                                <option value="gasto">💸 Gasto</option>
+                                <option value="ingreso">💰 Ingreso</option>
+                            </select>
+                        </div>
+                        <button type="submit" class="btn-primary">Registrar Movimiento</button>
+                    </form>
+                </div>
+
+                <div class="card">
+                    <button class="btn-danger-outline" id="btn-reiniciar-todo" style="width: 100%;">Borrar Todos los Datos</button>
+                </div>
+            </main>
+        </div>
     </div>
 
 </body>
