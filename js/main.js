@@ -48,16 +48,24 @@ const App = {
     },
 
     async cargarCategorias() {
+        const fallback = ["Alquiler", "Sueldo", "Comida", "Transporte", "Servicios", "Venta", "Entretenimiento", "Salud"];
+
         try {
             const respuesta = await fetch("data/transacciones.json");
             if (!respuesta.ok) throw new Error("No se pudo cargar el JSON");
             const categorias = await respuesta.json();
-            console.log("Categorías cargadas:", categorias);
+            this.poblarDatalist(categorias.map(c => c.nombre));
+            console.log("Categorías cargadas desde JSON:", categorias);
         } catch (error) {
-            console.error("Error al cargar categorías:", error);
-        } finally {
-            console.log("Carga de datos finalizada.");
+            console.warn("fetch bloqueado (file://), usando categorías por defecto:", error.message);
+            this.poblarDatalist(fallback);
         }
+    },
+
+    poblarDatalist(nombres) {
+        const datalist = document.getElementById("lista-categorias");
+        if (!datalist) return;
+        datalist.innerHTML = nombres.map(n => `<option value="${n}">`).join("");
     },
 
     configurarEventos() {
