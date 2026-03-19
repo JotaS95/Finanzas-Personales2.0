@@ -43,9 +43,18 @@ const App = {
         const form = document.getElementById("formulario-gastos");
         form.onsubmit = (e) => this.procesarNuevaTransaccion(e);
 
-        // Guardar presupuesto
+        // Guardar presupuesto (al hacer clic)
         const btnPresu = document.getElementById("btn-guardar-presupuesto");
+        const inputPresu = document.getElementById("input-presupuesto");
+        
         btnPresu.onclick = () => this.cambiarPresupuesto();
+        
+        // Guardar presupuesto (al presionar Enter)
+        inputPresu.onkeyup = (e) => {
+            if (e.key === "Enter") {
+                this.cambiarPresupuesto();
+            }
+        };
 
         // Reiniciar todo
         const btnReset = document.getElementById("btn-reiniciar-todo");
@@ -62,7 +71,7 @@ const App = {
 
         // VALIDACIÓN
         const descripcion = inputDesc.value.trim();
-        const monto = parseFloat(inputMonto.value);
+        const monto = this.parsearMonto(inputMonto.value);
 
         if (descripcion === "") {
             UIManager.notificar("La descripción no puede estar vacía", "error");
@@ -70,7 +79,7 @@ const App = {
         }
 
         if (isNaN(monto) || monto <= 0) {
-            UIManager.notificar("El monto debe ser un número mayor a 0", "error");
+            UIManager.notificar("Monto inválido. Ingresá solo números (ej: 1500).", "error");
             return;
         }
 
@@ -96,7 +105,7 @@ const App = {
     // cambiar presupuesto
     cambiarPresupuesto() {
         const input = document.getElementById("input-presupuesto");
-        const valor = parseFloat(input.value);
+        const valor = this.parsearMonto(input.value);
 
         if (!isNaN(valor) && valor >= 0) {
             this.presupuesto = valor;
@@ -105,8 +114,23 @@ const App = {
             UIManager.notificar("Presupuesto actualizado");
             this.actualizarUI();
         } else {
-            UIManager.notificar("Ingresa un monto válido", "error");
+            UIManager.notificar("Ingresa un monto válido (ej: 5000)", "error");
         }
+    },
+
+    // Normalizar montos: acepta 1500 | 1500.50 | 1500,50
+    parsearMonto(valor) {
+        let raw = String(valor).trim();
+        // Cambiar coma por punto
+        raw = raw.replace(",", ".");
+
+        // Si el usuario puso un punto como separador de miles (ej: 5.000)
+        // lo detectamos si hay exactamente 3 dígitos después del punto
+        if (/^\d+\.\d{3}$/.test(raw)) {
+            raw = raw.replace(".", "");
+        }
+
+        return parseFloat(raw);
     },
 
     // eliminar una transacción

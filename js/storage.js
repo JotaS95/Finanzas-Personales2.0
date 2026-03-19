@@ -18,13 +18,15 @@ const StorageManager = {
 
     // Guardar presupuesto
     guardarPresupuesto(valor) {
-        localStorage.setItem(this.KEYS.PRESUPUESTO, valor.toString());
+        const num = parseFloat(valor);
+        localStorage.setItem(this.KEYS.PRESUPUESTO, isNaN(num) ? "0" : num.toString());
     },
 
     // Obtener presupuesto
     obtenerPresupuesto() {
         const data = localStorage.getItem(this.KEYS.PRESUPUESTO);
-        return data ? parseFloat(data) : 0;
+        const parsed = parseFloat(data);
+        return isNaN(parsed) ? 0 : parsed;
     },
 
     // Limpiar todo
