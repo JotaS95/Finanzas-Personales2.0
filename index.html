@@ -40,7 +40,7 @@
             <div class="login-form-group" id="grupo-password" style="display:none;">
                 <label id="label-password">Contraseña</label>
                 <div class="password-wrapper">
-                    <input type="password" id="input-password" placeholder="Ingresá tu contraseña" autocomplete="current-password">
+                    <input type="password" id="input-password" placeholder="Ej: 123456" inputmode="numeric" pattern="[0-9]*" maxlength="6" autocomplete="current-password">
                     <button type="button" class="btn-toggle-pass" id="btn-toggle-pass" title="Mostrar/ocultar contraseña">👁</button>
                 </div>
             </div>
@@ -49,7 +49,7 @@
             <div class="login-form-group" id="grupo-confirm-password" style="display:none;">
                 <label>Confirmar contraseña</label>
                 <div class="password-wrapper">
-                    <input type="password" id="input-confirm-password" placeholder="Repetí tu contraseña" autocomplete="new-password">
+                    <input type="password" id="input-confirm-password" placeholder="Repetí los 6 números" inputmode="numeric" pattern="[0-9]*" maxlength="6" autocomplete="new-password">
                     <button type="button" class="btn-toggle-pass" id="btn-toggle-confirm-pass" title="Mostrar/ocultar contraseña">👁</button>
                 </div>
             </div>

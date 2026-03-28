@@ -22,6 +22,13 @@ const App = {
             if (e.key === "Enter") this.login();
         };
 
+        // Forzar solo números en tiempo real
+        ['input-password', 'input-confirm-password'].forEach(id => {
+            document.getElementById(id).addEventListener('input', (e) => {
+                e.target.value = e.target.value.replace(/[^0-9]/g, '').slice(0, 6);
+            });
+        });
+
         // Botón mostrar/ocultar contraseña
         document.getElementById("btn-toggle-pass").onclick = () => {
             const inp = document.getElementById("input-password");
@@ -116,7 +123,11 @@ const App = {
                 return;
             }
             if (password.length < 4) {
-                UIManager.notificar("La contraseña debe tener al menos 4 caracteres", "error");
+                UIManager.notificar("El PIN debe tener entre 4 y 6 dígitos numéricos", "error");
+                return;
+            }
+            if (!/^[0-9]+$/.test(password)) {
+                UIManager.notificar("Solo se permiten números en la contraseña", "error");
                 return;
             }
             if (password !== confirmPassword) {
