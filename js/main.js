@@ -6,26 +6,142 @@ const App = {
     async iniciar() {
         const usuarios = StorageManager.obtenerUsuarios();
         UIManager.renderizarUsuarios(usuarios,
-            (u) => this.seleccionarUsuario(u),
+            (u) => this.seleccionarUsuarioDesdeChip(u),
             (u) => this.confirmarEliminarUsuario(u)
         );
 
-        document.getElementById("btn-ingresar").onclick = () => this.login();
+        // Al escribir el nombre, detecto si es usuario nuevo o existente
+        document.getElementById("input-login-usuario").addEventListener("input", () => this.actualizarFormLogin());
         document.getElementById("input-login-usuario").onkeydown = (e) => {
             if (e.key === "Enter") this.login();
         };
+        document.getElementById("input-password").onkeydown = (e) => {
+            if (e.key === "Enter") this.login();
+        };
+        document.getElementById("input-confirm-password").onkeydown = (e) => {
+            if (e.key === "Enter") this.login();
+        };
+
+        // Botón mostrar/ocultar contraseña
+        document.getElementById("btn-toggle-pass").onclick = () => {
+            const inp = document.getElementById("input-password");
+            inp.type = inp.type === "password" ? "text" : "password";
+        };
+        document.getElementById("btn-toggle-confirm-pass").onclick = () => {
+            const inp = document.getElementById("input-confirm-password");
+            inp.type = inp.type === "password" ? "text" : "password";
+        };
+
+        document.getElementById("btn-ingresar").onclick = () => this.login();
     },
 
-    login() {
-        const input = document.getElementById("input-login-usuario");
-        const nombre = input.value.trim();
+    // Detecta si el usuario existe y ajusta el formulario
+    actualizarFormLogin() {
+        const nombre = document.getElementById("input-login-usuario").value.trim();
+        const usuarios = StorageManager.obtenerUsuarios();
+        const existe = usuarios.includes(nombre);
+
+        const grupoPass = document.getElementById("grupo-password");
+        const grupoConfirm = document.getElementById("grupo-confirm-password");
+        const hint = document.getElementById("login-hint");
+        const labelPass = document.getElementById("label-password");
+        const btnIngresar = document.getElementById("btn-ingresar");
+
+        // Limpiar campos al cambiar de usuario
+        document.getElementById("input-password").value = "";
+        document.getElementById("input-confirm-password").value = "";
+
+        if (nombre === "") {
+            grupoPass.style.display = "none";
+            grupoConfirm.style.display = "none";
+            hint.style.display = "none";
+            btnIngresar.textContent = "Ingresar →";
+            return;
+        }
+
+        if (existe) {
+            // Usuario existente → solo pedir contraseña
+            grupoPass.style.display = "block";
+            grupoConfirm.style.display = "none";
+            labelPass.textContent = "Contraseña";
+            hint.style.display = "block";
+            hint.className = "login-hint hint-info";
+            hint.textContent = "👤 Usuario existente. Ingresá tu contraseña.";
+            btnIngresar.textContent = "Iniciar sesión →";
+        } else {
+            // Usuario nuevo → pedir contraseña y confirmación
+            grupoPass.style.display = "block";
+            grupoConfirm.style.display = "block";
+            labelPass.textContent = "Crear contraseña";
+            hint.style.display = "block";
+            hint.className = "login-hint hint-new";
+            hint.textContent = "✨ Usuario nuevo. Elegí una contraseña para tu cuenta.";
+            btnIngresar.textContent = "Crear cuenta →";
+        }
+    },
+
+    async login() {
+        const nombre = document.getElementById("input-login-usuario").value.trim();
+        const password = document.getElementById("input-password").value;
+        const confirmPassword = document.getElementById("input-confirm-password").value;
 
         if (nombre === "") {
             UIManager.notificar("Ingresá tu nombre para continuar", "error");
             return;
         }
 
-        this.seleccionarUsuario(nombre);
+        const usuarios = StorageManager.obtenerUsuarios();
+        const existe = usuarios.includes(nombre);
+
+        if (existe) {
+            // Login de usuario existente
+            if (password === "") {
+                UIManager.notificar("Ingresá tu contraseña", "error");
+                document.getElementById("input-password").focus();
+                return;
+            }
+            const ok = await StorageManager.verificarPassword(nombre, password);
+            if (!ok) {
+                UIManager.notificar("❌ Contraseña incorrecta", "error");
+                document.getElementById("input-password").value = "";
+                document.getElementById("input-password").focus();
+                return;
+            }
+            this.seleccionarUsuario(nombre);
+        } else {
+            // Registro de usuario nuevo
+            if (password === "") {
+                UIManager.notificar("Elegí una contraseña para tu cuenta", "error");
+                document.getElementById("input-password").focus();
+                return;
+            }
+            if (password.length < 4) {
+                UIManager.notificar("La contraseña debe tener al menos 4 caracteres", "error");
+                return;
+            }
+            if (password !== confirmPassword) {
+                UIManager.notificar("Las contraseñas no coinciden", "error");
+                document.getElementById("input-confirm-password").value = "";
+                document.getElementById("input-confirm-password").focus();
+                return;
+            }
+            await StorageManager.guardarPassword(nombre, password);
+            UIManager.notificar("✅ Cuenta creada exitosamente", "success");
+            this.seleccionarUsuario(nombre);
+        }
+    },
+
+    // Login desde chip (pide contraseña si tiene)
+    async seleccionarUsuarioDesdeChip(nombre) {
+        if (!StorageManager.tienePassword(nombre)) {
+            // Usuario legacy sin contraseña → acceso directo
+            this.seleccionarUsuario(nombre);
+            return;
+        }
+        // Pre-cargar nombre y mostrar el formulario de contraseña
+        document.getElementById("input-login-usuario").value = nombre;
+        this.actualizarFormLogin();
+        document.getElementById("input-password").focus();
     },
 
     seleccionarUsuario(nombre) {
@@ -189,7 +305,7 @@ const App = {
                 // Refrescar los chips
                 const usuarios = StorageManager.obtenerUsuarios();
                 UIManager.renderizarUsuarios(usuarios,
-                    (u) => this.seleccionarUsuario(u),
+                    (u) => this.seleccionarUsuarioDesdeChip(u),
                     (u) => this.confirmarEliminarUsuario(u)
                 );
             }
@@ -200,10 +316,17 @@ const App = {
         this.usuario = null;
         this.transacciones = [];
         this.presupuesto = 0;
+        // Resetear campos del formulario de login
         document.getElementById("input-login-usuario").value = "";
+        document.getElementById("input-password").value = "";
+        document.getElementById("input-confirm-password").value = "";
+        document.getElementById("grupo-password").style.display = "none";
+        document.getElementById("grupo-confirm-password").style.display = "none";
+        document.getElementById("login-hint").style.display = "none";
+        document.getElementById("btn-ingresar").textContent = "Ingresar →";
         const usuarios = StorageManager.obtenerUsuarios();
         UIManager.renderizarUsuarios(usuarios,
-            (u) => this.seleccionarUsuario(u),
+            (u) => this.seleccionarUsuarioDesdeChip(u),
             (u) => this.confirmarEliminarUsuario(u)
         );
         UIManager.mostrarLogin();

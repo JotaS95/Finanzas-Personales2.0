@@ -31,6 +31,7 @@ const StorageManager = {
         const keys = this.getKeys(usuario);
         localStorage.removeItem(keys.TRANSACCIONES);
         localStorage.removeItem(keys.PRESUPUESTO);
+        localStorage.removeItem(`billetera_${usuario}_password`);
         const lista = this.obtenerUsuarios().filter(u => u !== usuario);
         localStorage.setItem(this.USUARIOS_KEY, JSON.stringify(lista));
     },
@@ -60,5 +61,35 @@ const StorageManager = {
         const keys = this.getKeys(usuario);
         localStorage.removeItem(keys.TRANSACCIONES);
         localStorage.removeItem(keys.PRESUPUESTO);
+    },
+
+    // ----- CONTRASEÑAS -----
+
+    // Hashea una contraseña con SHA-256 y devuelve una promesa con el hex
+    async hashear(texto) {
+        const encoder = new TextEncoder();
+        const data = encoder.encode(texto);
+        const hashBuffer = await crypto.subtle.digest("SHA-256", data);
+        const hashArray = Array.from(new Uint8Array(hashBuffer));
+        return hashArray.map(b => b.toString(16).padStart(2, "0")).join("");
+    },
+
+    // Guarda la contraseña hasheada
+    async guardarPassword(usuario, password) {
+        const hash = await this.hashear(password);
+        localStorage.setItem(`billetera_${usuario}_password`, hash);
+    },
+
+    // Retorna true si la contraseña ingresada es correcta
+    async verificarPassword(usuario, password) {
+        const guardada = localStorage.getItem(`billetera_${usuario}_password`);
+        if (!guardada) return true; // usuario sin contraseña (migración)
+        const hash = await this.hashear(password);
+        return hash === guardada;
+    },
+
+    // Indica si el usuario ya tiene contraseña configurada
+    tienePassword(usuario) {
+        return !!localStorage.getItem(`billetera_${usuario}_password`);
     }
 };
