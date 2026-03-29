@@ -237,14 +237,15 @@ const UIManager = {
             info: "linear-gradient(135deg, #4361ee, #3a0ca3)"
         };
 
-        // Las alertas de presupuesto (info/error) duran más (6.5s), las de éxito menos (2.5s)
-        const duracion = (tipo === "success") ? 2500 : 6500;
+        // error (alertas presupuesto) = 6s | info (bienvenida) = 2.5s | success = 2s
+        const duracion = tipo === "error" ? 6000 : tipo === "info" ? 2500 : 2000;
 
         Toastify({
             text: mensaje,
             duration: duracion,
             gravity: "top",
             position: "right",
+            offset: { x: 0, y: 65 },
             style: {
                 background: colores[tipo] || colores.success,
                 borderRadius: "10px",
