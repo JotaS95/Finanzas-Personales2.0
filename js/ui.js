@@ -25,6 +25,7 @@ const UIManager = {
     mostrarLogin() {
         document.getElementById("login-screen").style.display = "flex";
         document.getElementById("app-screen").style.display = "none";
+        this.aplicarFondo(null); // Resetear al fondo por defecto en login
     },
 
     mostrarApp(usuario) {
@@ -259,11 +260,26 @@ const UIManager = {
         Swal.fire({
             title: titulo, text: texto, icon: "warning",
             showCancelButton: true,
-            confirmButtonColor: "#ef233c",
-            cancelButtonColor: "#8892a4",
-            confirmButtonText: "Sí, continuar",
-            cancelButtonText: "Cancelar"
-        }).then(result => { if (result.isConfirmed) callback(); });
+            confirmButtonColor: "#4361ee",
+            cancelButtonColor: "#ef233c",
+            confirmButtonText: "Sí, borrar",
+            cancelButtonText: "Cancelar",
+            background: "#ffffff",
+            color: "#1a1a1a"
+        }).then((result) => {
+            if (result.isConfirmed) callback();
+        });
+    },
+
+    aplicarFondo(base64) {
+        if (base64) {
+            document.body.style.backgroundImage = `url(${base64})`;
+            document.body.style.backgroundSize = "cover";
+            document.body.style.backgroundPosition = "center";
+            document.body.style.backgroundAttachment = "fixed";
+        } else {
+            document.body.style.backgroundImage = "";
+        }
     },
 
     // Limpieza Inteligente

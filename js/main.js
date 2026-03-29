@@ -177,6 +177,10 @@ const App = {
         this.transacciones = StorageManager.obtenerTransacciones(this.usuario);
         this.presupuesto = StorageManager.obtenerPresupuesto(this.usuario);
 
+        // Fondo personalizado
+        const fondo = StorageManager.obtenerFondo(this.usuario);
+        UIManager.aplicarFondo(fondo);
+
         UIManager.mostrarApp(this.usuario);
         UIManager.notificar(`¡Bienvenido, ${this.usuario}! 👋`, "info");
 
@@ -210,6 +214,24 @@ const App = {
         document.getElementById("btn-guardar-presupuesto").onclick = () => this.cambiarPresupuesto();
         document.getElementById("btn-cerrar-sesion").onclick = () => this.cerrarSesion();
         document.getElementById("btn-reiniciar-todo").onclick = () => this.solicitarLimpieza();
+
+        // Fondo de pantalla
+        const inputFondo = document.getElementById("input-fondo");
+        document.getElementById("btn-cambiar-fondo").onclick = () => inputFondo.click();
+
+        inputFondo.onchange = (e) => {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = (event) => {
+                    const base64 = event.target.result;
+                    StorageManager.guardarFondo(this.usuario, base64);
+                    UIManager.aplicarFondo(base64);
+                    UIManager.notificar("¡Fondo actualizado!", "success");
+                };
+                reader.readAsDataURL(file);
+            }
+        };
     },
 
     procesarNuevaTransaccion(e) {

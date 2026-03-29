@@ -218,19 +218,38 @@ body {
 
 #navbar-nombre { font-size: 0.9rem; font-weight: 600; color: var(--text); }
 
-.btn-logout {
-    background: transparent;
-    border: 1.5px solid var(--border);
+.btn-logout, .btn-fondo {
+    padding: 8px 16px;
     border-radius: 8px;
-    color: var(--text-muted);
-    font-size: 0.8rem;
-    padding: 5px 12px;
+    font-size: 0.9rem;
+    font-weight: 600;
     cursor: pointer;
-    font-family: inherit;
-    font-weight: 500;
     transition: all 0.2s;
+    font-family: inherit;
 }
-.btn-logout:hover { border-color: var(--danger); color: var(--danger); }
+
+.btn-logout {
+    background: rgba(239, 35, 60, 0.1);
+    color: var(--danger);
+    border: 1px solid rgba(239, 35, 60, 0.2);
+}
+
+.btn-logout:hover {
+    background: var(--danger);
+    color: white;
+}
+
+.btn-fondo {
+    background: rgba(67, 97, 238, 0.1);
+    color: var(--primary);
+    border: 1px solid rgba(67, 97, 238, 0.2);
+    margin-right: 8px;
+}
+
+.btn-fondo:hover {
+    background: var(--primary);
+    color: white;
+}
 
 /* LAYOUT */
 .app-container {

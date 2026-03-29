@@ -9,6 +9,7 @@ const StorageManager = {
         return {
             TRANSACCIONES: `billetera_${usuario}_transacciones`,
             PRESUPUESTO: `billetera_${usuario}_presupuesto`,
+            FONDO: `billetera_${usuario}_bg`,
         };
     },
 
@@ -31,6 +32,7 @@ const StorageManager = {
         const keys = this.getKeys(usuario);
         localStorage.removeItem(keys.TRANSACCIONES);
         localStorage.removeItem(keys.PRESUPUESTO);
+        localStorage.removeItem(keys.FONDO);
         localStorage.removeItem(`billetera_${usuario}_password`);
         const lista = this.obtenerUsuarios().filter(u => u !== usuario);
         localStorage.setItem(this.USUARIOS_KEY, JSON.stringify(lista));
@@ -56,11 +58,21 @@ const StorageManager = {
         return data ? parseFloat(data) : 0;
     },
 
+    // Fondo de pantalla
+    guardarFondo(usuario, base64) {
+        localStorage.setItem(this.getKeys(usuario).FONDO, base64);
+    },
+
+    obtenerFondo(usuario) {
+        return localStorage.getItem(this.getKeys(usuario).FONDO);
+    },
+
     // Limpiar solo datos del usuario (no la cuenta)
     limpiarUsuario(usuario) {
         const keys = this.getKeys(usuario);
         localStorage.removeItem(keys.TRANSACCIONES);
         localStorage.removeItem(keys.PRESUPUESTO);
+        localStorage.removeItem(keys.FONDO);
     },
 
     // ----- CONTRASEÑAS -----
