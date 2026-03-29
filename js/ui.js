@@ -272,17 +272,43 @@ const UIManager = {
         });
     },
 
-    aplicarFondo(base64) {
+    async aplicarFondo(base64) {
         if (base64) {
             document.body.style.backgroundImage = `url(${base64})`;
             document.body.style.backgroundSize = "cover";
             document.body.style.backgroundPosition = "center";
             document.body.style.backgroundAttachment = "fixed";
             document.body.classList.add("has-custom-bg");
+            
+            // Extraer y aplicar color dinámico
+            try {
+                const color = await this.extraerColorDominante(base64);
+                document.documentElement.style.setProperty('--dynamic-accent', color);
+            } catch (e) {
+                console.warn("No se pudo extraer el color de la imagen", e);
+            }
         } else {
             document.body.style.backgroundImage = "";
             document.body.classList.remove("has-custom-bg");
+            document.documentElement.style.removeProperty('--dynamic-accent');
         }
+    },
+
+    extraerColorDominante(base64) {
+        return new Promise((resolve) => {
+            const img = new Image();
+            img.src = base64;
+            img.onload = () => {
+                const canvas = document.createElement('canvas');
+                const ctx = canvas.getContext('2d');
+                canvas.width = 1;
+                canvas.height = 1;
+                ctx.drawImage(img, 0, 0, 1, 1);
+                const [r, g, b] = ctx.getImageData(0, 0, 1, 1).data;
+                resolve(`rgb(${r}, ${g}, ${b})`);
+            };
+            img.onerror = () => resolve('var(--primary)');
+        });
     },
 
     // Limpieza Inteligente
