@@ -20,14 +20,10 @@ const App = {
         document.getElementById("input-new-password").onkeydown   = (e) => { if (e.key === "Enter") document.getElementById("input-confirm-password").focus(); };
         document.getElementById("input-confirm-password").onkeydown = (e) => { if (e.key === "Enter") this.crearCuenta(); };
 
-        // Solo números en PIN
-        ["input-password", "input-new-password", "input-confirm-password"].forEach(id => {
-            document.getElementById(id).addEventListener("input", (e) => {
-                e.target.value = e.target.value.replace(/[^0-9]/g, "").slice(0, 6);
-            });
-        });
+        // Solo números en PIN — removido (ahora se permiten letras y números)
+        // El filtrado ya no es necesario con la nueva política de contraseñas
 
-        // Toggle mostrar/ocultar PIN
+        // Toggle mostrar/ocultar contraseña
         const toggles = {
             "btn-toggle-pass":         "input-password",
             "btn-toggle-new-pass":     "input-new-password",
@@ -123,12 +119,16 @@ const App = {
             document.getElementById("input-new-password").focus();
             return;
         }
-        if (password.length !== 6) {
-            UIManager.notificar("El PIN debe tener exactamente 6 dígitos", "error");
+        if (password.length < 8) {
+            UIManager.notificar("La contraseña debe tener al menos 8 caracteres", "error");
             return;
         }
-        if (!/^[0-9]+$/.test(password)) {
-            UIManager.notificar("Solo se permiten números en el PIN", "error");
+        if (!/[a-zA-Z]/.test(password)) {
+            UIManager.notificar("La contraseña debe contener al menos una letra", "error");
+            return;
+        }
+        if (!/[0-9]/.test(password)) {
+            UIManager.notificar("La contraseña debe contener al menos un número", "error");
             return;
         }
         if (password !== confirm) {
