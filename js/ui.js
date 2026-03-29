@@ -25,6 +25,7 @@ const UIManager = {
     mostrarLogin() {
         document.getElementById("login-screen").style.display = "flex";
         document.getElementById("app-screen").style.display = "none";
+        document.body.classList.remove("has-custom-bg");
         this.aplicarFondo(null); // Resetear al fondo por defecto en login
     },
 
@@ -277,8 +278,10 @@ const UIManager = {
             document.body.style.backgroundSize = "cover";
             document.body.style.backgroundPosition = "center";
             document.body.style.backgroundAttachment = "fixed";
+            document.body.classList.add("has-custom-bg");
         } else {
             document.body.style.backgroundImage = "";
+            document.body.classList.remove("has-custom-bg");
         }
     },
 

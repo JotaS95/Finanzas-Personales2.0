@@ -18,7 +18,7 @@
     --radius: 18px;
 }
 
-/* GRADIENTE */
+/* GRADIENTE / FONDO */
 .mesh-bg {
     background-color: #f5f6fa;
     background-image: 
@@ -29,6 +29,17 @@
         radial-gradient(at 0% 100%, hsla(227,100%,97%,1) 0, transparent 50%), 
         radial-gradient(at 100% 100%, hsla(227,100%,97%,1) 0, transparent 50%);
     background-attachment: fixed;
+    transition: background-image 0.5s ease-in-out;
+}
+
+/* OVERLAY PARA MEJORAR CONTRASTE CON FONDO PERSONALIZADO */
+body.has-custom-bg::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.15); /* Oscurece un poco la foto para que el blanco resalte */
+    z-index: -1;
+    pointer-events: none;
 }
 
 *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
@@ -726,3 +737,52 @@ input:focus, select:focus {
     .stat-card.principal .stat-valor { font-size: 1.3rem; }
 }
 
+/* ========== MODO GLASS (CUANDO HAY FONDO) ========== */
+body.has-custom-bg .navbar {
+    background: rgba(255, 255, 255, 0.4);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+body.has-custom-bg .sidebar-historial {
+    background: rgba(255, 255, 255, 0.25);
+    backdrop-filter: blur(16px);
+    border-right: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+body.has-custom-bg .card, 
+body.has-custom-bg .stat-card {
+    background: rgba(255, 255, 255, 0.4);
+    backdrop-filter: blur(12px) saturate(160%);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.07);
+}
+
+body.has-custom-bg .stat-card.principal {
+    background: linear-gradient(135deg, rgba(67, 97, 238, 0.85) 0%, rgba(108, 99, 255, 0.85) 100%);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+body.has-custom-bg .mov-card {
+    background: rgba(255, 255, 255, 0.15);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+body.has-custom-bg input, 
+body.has-custom-bg select {
+    background: rgba(255, 255, 255, 0.2);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+body.has-custom-bg input:focus, 
+body.has-custom-bg select:focus {
+    background: rgba(255, 255, 255, 0.8);
+}
+
+/* Ajustes de contraste en modo glass */
+body.has-custom-bg .card-title,
+body.has-custom-bg .stat-label,
+body.has-custom-bg #navbar-nombre {
+    color: #0d1117; /* Texto un poco más oscuro para mejor lectura */
+    font-weight: 700;
+}
