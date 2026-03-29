@@ -280,21 +280,37 @@ const UIManager = {
             document.body.style.backgroundAttachment = "fixed";
             document.body.classList.add("has-custom-bg");
             
-            // Extraer y aplicar color dinámico
+            // Extraer, analizar y aplicar colores dinámicos
             try {
-                const color = await this.extraerColorDominante(base64);
+                const { color, isDark } = await this.analizarImagen(base64);
+                
+                // Aplicar color de acento
                 document.documentElement.style.setProperty('--dynamic-accent', color);
+                
+                // Aplicar contraste según brillo
+                if (isDark) {
+                    document.documentElement.style.setProperty('--dynamic-text', '#ffffff');
+                    document.documentElement.style.setProperty('--dynamic-surface', 'rgba(255, 255, 255, 0.12)');
+                    document.documentElement.style.setProperty('--dynamic-subtext', 'rgba(255, 255, 255, 0.7)');
+                } else {
+                    document.documentElement.style.setProperty('--dynamic-text', '#0d1117');
+                    document.documentElement.style.setProperty('--dynamic-surface', 'rgba(0, 0, 0, 0.1)');
+                    document.documentElement.style.setProperty('--dynamic-subtext', 'rgba(0, 0, 0, 0.6)');
+                }
             } catch (e) {
-                console.warn("No se pudo extraer el color de la imagen", e);
+                console.warn("Error analizando imagen:", e);
             }
         } else {
             document.body.style.backgroundImage = "";
             document.body.classList.remove("has-custom-bg");
             document.documentElement.style.removeProperty('--dynamic-accent');
+            document.documentElement.style.removeProperty('--dynamic-text');
+            document.documentElement.style.removeProperty('--dynamic-surface');
+            document.documentElement.style.removeProperty('--dynamic-subtext');
         }
     },
 
-    extraerColorDominante(base64) {
+    analizarImagen(base64) {
         return new Promise((resolve) => {
             const img = new Image();
             img.src = base64;
@@ -305,9 +321,17 @@ const UIManager = {
                 canvas.height = 1;
                 ctx.drawImage(img, 0, 0, 1, 1);
                 const [r, g, b] = ctx.getImageData(0, 0, 1, 1).data;
-                resolve(`rgb(${r}, ${g}, ${b})`);
+                
+                // Color dominante
+                const color = `rgb(${r}, ${g}, ${b})`;
+                
+                // Fórmula de brillo relativo (HSP/YIQ)
+                const brightness = (r * 299 + g * 587 + b * 114) / 1000;
+                const isDark = brightness < 128;
+                
+                resolve({ color, isDark });
             };
-            img.onerror = () => resolve('var(--primary)');
+            img.onerror = () => resolve({ color: 'var(--primary)', isDark: false });
         });
     },
 

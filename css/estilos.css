@@ -32,12 +32,11 @@
     transition: background-image 0.5s ease-in-out;
 }
 
-/* OVERLAY PARA MEJORAR CONTRASTE CON FONDO PERSONALIZADO */
 body.has-custom-bg::before {
     content: '';
     position: fixed;
     inset: 0;
-    background: rgba(0, 0, 0, 0.15); /* Oscurece un poco la foto para que el blanco resalte */
+    background: rgba(0, 0, 0, 0.05); /* Overlay casi inexistente para no tapar la foto */
     z-index: -1;
     pointer-events: none;
 }
@@ -737,67 +736,73 @@ input:focus, select:focus {
     .stat-card.principal .stat-valor { font-size: 1.3rem; }
 }
 
-/* ========== MODO GLASS (CUANDO HAY FONDO) ========== */
+/* ========== SMART GLASS (DISEÑO ADAPTABLE) ========== */
 body.has-custom-bg .navbar {
-    background: rgba(255, 255, 255, 0.4);
-    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+    background: var(--dynamic-surface);
+    backdrop-filter: blur(20px);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 body.has-custom-bg .sidebar-historial {
-    background: rgba(255, 255, 255, 0.25);
-    backdrop-filter: blur(16px);
-    border-right: 1px solid rgba(255, 255, 255, 0.15);
+    background: var(--dynamic-surface);
+    backdrop-filter: blur(12px);
+    border-right: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 body.has-custom-bg .card, 
 body.has-custom-bg .stat-card {
-    background: rgba(255, 255, 255, 0.18);
-    backdrop-filter: blur(16px) saturate(180%);
-    border: 1px solid rgba(255, 255, 255, 0.25);
-    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.15);
+    background: var(--dynamic-surface);
+    backdrop-filter: blur(10px) saturate(180%);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.2);
+    transition: backdrop-filter 0.4s ease, background 0.4s ease, transform 0.3s ease;
+}
+
+/* EFECTO LIMPIEZA DE CRISTAL AL PASAR EL MOUSE */
+body.has-custom-bg .card:hover, 
+body.has-custom-bg .stat-card:hover {
+    backdrop-filter: blur(0px) saturate(100%);
+    background: rgba(255, 255, 255, 0.05); /* Casi invisible al hover para ver la foto */
+    transform: translateY(-5px);
 }
 
 body.has-custom-bg .stat-card.principal {
-    background: linear-gradient(135deg, var(--dynamic-accent, var(--primary)) 0%, rgba(0,0,0,0.5) 100%);
-    backdrop-filter: blur(12px);
+    background: linear-gradient(135deg, var(--dynamic-accent, var(--primary)) 0%, rgba(0,0,0,0.4) 100%);
+    backdrop-filter: blur(10px);
     border: 1px solid rgba(255, 255, 255, 0.3);
+    color: #ffffff;
 }
 
 body.has-custom-bg .btn-primary {
     background: var(--dynamic-accent, var(--primary));
     border: 1px solid rgba(255, 255, 255, 0.2);
-    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
-}
-
-body.has-custom-bg .mov-card {
-    background: rgba(255, 255, 255, 0.1);
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: #ffffff;
 }
 
 body.has-custom-bg input, 
 body.has-custom-bg select {
-    background: rgba(255, 255, 255, 0.15);
-    border: 1px solid rgba(255, 255, 255, 0.3);
-    color: #ffffff;
-    text-shadow: 0 1px 2px rgba(0,0,0,0.3);
+    background: var(--dynamic-surface);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: var(--dynamic-text);
 }
 
 body.has-custom-bg input::placeholder {
-    color: rgba(255, 255, 255, 0.7);
+    color: var(--dynamic-subtext);
 }
 
 body.has-custom-bg input:focus, 
 body.has-custom-bg select:focus {
-    background: rgba(255, 255, 255, 0.9);
-    color: var(--text);
+    background: rgba(255, 255, 255, 0.95);
+    color: #0d1117;
 }
 
-/* Ajustes de contraste en modo glass */
+/* Ajustes de contraste dinámicos */
 body.has-custom-bg .card-title,
 body.has-custom-bg .stat-label,
 body.has-custom-bg #navbar-nombre,
-body.has-custom-bg .navbar-brand {
-    color: #ffffff;
-    text-shadow: 0 2px 4px rgba(0,0,0,0.5);
+body.has-custom-bg .navbar-brand,
+body.has-custom-bg .stat-valor:not(.valor-positivo):not(.valor-negativo) {
+    color: var(--dynamic-text);
+    text-shadow: 0 1px 3px rgba(0,0,0,0.2);
     font-weight: 700;
 }
