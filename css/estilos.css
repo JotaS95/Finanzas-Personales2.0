@@ -61,7 +61,7 @@ body {
 
 .login-presentation {
     flex: 1.3;
-    padding: 60px 40px;
+    padding: 40px 40px 100px;
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -70,6 +70,7 @@ body {
     color: white;
     background: linear-gradient(90deg, rgba(0, 0, 0, 0.699) 0%, transparent 100%);
     position: relative;
+    gap: 0;
 }
 
 .presentation-title {
@@ -145,12 +146,10 @@ body {
 }
 
 .presentation-advice {
-    position: absolute;
-    top: 30px;
-    left: 40px;
-    right: 40px;
-    margin: 0;
-    max-width: min(420px, calc(100% - 80px));
+    position: relative;
+    align-self: flex-start;
+    width: 100%;
+    margin: 0 0 28px 0;
     background: linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.05));
     border-left: 4px solid var(--success);
     padding: 16px 20px;
