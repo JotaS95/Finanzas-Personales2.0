@@ -85,7 +85,7 @@ body {
 .presentation-subtitle {
     font-size: 1.15rem;
     color: rgba(255, 255, 255, 0.85);
-    margin-bottom: 50px;
+    margin-bottom: 30px;
     max-width: 500px;
     line-height: 1.4;
     animation: fadeInUp 0.7s ease;
