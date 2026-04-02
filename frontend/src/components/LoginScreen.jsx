@@ -116,8 +116,8 @@ const LoginScreen = ({ onLoginSuccess }) => {
           </div>
         </div>
 
-        <h1 className="presentation-title">Tus finanzas,<br />bajo control.</h1>
-        <p className="presentation-subtitle">Tu Billetera Virtual rápida, privada y estéticamente moderna.</p>
+        <h1 className="presentation-title">La gestión de tus finanzas,<br />bajo control.</h1>
+        <p className="presentation-subtitle">Un gestor de finanzas personales rápido, privado y estéticamente moderno.</p>
         
         <div className="presentation-features">
           <div className="feature-item">
