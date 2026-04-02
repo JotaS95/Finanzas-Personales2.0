@@ -5,6 +5,15 @@
     },
     "demo": {
       "password": "d3ad9315b7be5dd53b31a273b3b3aba5defe700808305aa16a3062b76658a791"
+    },
+    "tester": {
+      "password": "ef92b778bafe771e89245b89ecbc08a44a4e166c06659911881f383d4473e94f"
+    },
+    "jota": {
+      "password": "6ccb9e16abd50476c0cd57c4eccdfa6d5139fe32353b62f6645a1a069a51abe5"
+    },
+    "test": {
+      "password": "37268335dd6931045bdcdf92623ff819a64244b53d0e746d438797349d4da578"
     }
   },
   "data": {
@@ -17,6 +26,21 @@
       "transacciones": [],
       "presupuesto": 0,
       "fondo": "default"
+    },
+    "tester": {
+      "transacciones": [],
+      "presupuesto": 0,
+      "fondo": "default"
+    },
+    "jota": {
+      "transacciones": [],
+      "presupuesto": 0,
+      "fondo": "default"
+    },
+    "test": {
+      "transacciones": [],
+      "presupuesto": 0,
+      "fondo": "bg-nebula"
     }
   }
 }
