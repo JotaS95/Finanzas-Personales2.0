@@ -1018,13 +1018,19 @@ input:focus, select:focus {
 }
 
 @media (max-width: 1024px) {
+    html, body {
+        overflow-y: auto !important;
+        overflow-x: hidden !important;
+        height: auto !important;
+        position: relative !important;
+    }
+
     #login-screen {
         position: static !important;
         display: flex !important;
         flex-direction: column !important;
         min-height: 100vh;
         overflow-y: visible !important;
-        overflow-x: hidden !important;
         background-attachment: scroll;
     }
 
@@ -1049,27 +1055,29 @@ input:focus, select:focus {
     }
 
     .presentation-title {
-        font-size: 2.2rem !important;
-        line-height: 1.1;
-        margin-bottom: 12px;
+        font-size: 1.8rem !important;
+        line-height: 1.2;
+        margin-bottom: 8px;
         text-align: center;
+        letter-spacing: -0.5px;
     }
 
     .presentation-subtitle {
-        font-size: 0.95rem !important;
-        margin-bottom: 6px;
+        font-size: 0.9rem !important;
+        margin-bottom: 4px;
         text-align: center;
-        max-width: 90%;
+        max-width: 85%;
         margin-left: auto;
         margin-right: auto;
+        opacity: 0.8;
     }
 
     .presentation-advice {
-        padding: 12px 14px;
-        margin: 0 auto 25px;
-        max-width: 320px;
-        font-size: 0.78rem;
-        border-radius: 12px;
+        padding: 8px 12px;
+        margin: 0 auto 20px;
+        max-width: 280px;
+        font-size: 0.72rem;
+        border-radius: 10px;
     }
 
     .advice-icon { font-size: 1.2rem; }
@@ -1137,11 +1145,11 @@ input:focus, select:focus {
 }
 
 @media (max-width: 520px) {
-    .presentation-title { font-size: 1.8rem; }
+    .presentation-title { font-size: 1.6rem !important; }
     .stats-grid { grid-template-columns: 1fr; }
     .stat-card.principal { grid-column: span 1; }
     .main-content { padding: 16px; }
-    .login-box-wrapper { width: 92%; }
+    .login-box-wrapper { width: 95%; padding-top: 50px; }
 }
 
 
