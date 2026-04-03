@@ -1114,10 +1114,16 @@ input:focus, select:focus {
         transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
         border-radius: 0;
         border-left: 1px solid rgba(255, 255, 255, 0.5);
-        padding: 60px 25px;
+        padding: 60px 20px;
         transform: translateX(100%);
         visibility: hidden;
         pointer-events: none;
+        display: flex !important;
+        flex-direction: column !important;
+        justify-content: center !important;
+        align-items: center !important;
+        min-width: 0 !important;
+        left: auto !important;
     }
 
     .login-box-wrapper.mobile-open {

@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import LoginScreen from './components/LoginScreen';
 import Dashboard from './components/Dashboard';
 import { userService, dataService } from './services/api';
-import './styles/index.css';
 
 function App() {
   const [user, setUser] = useState(null);
