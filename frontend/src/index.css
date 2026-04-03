@@ -1129,6 +1129,10 @@ input:focus, select:focus {
     .login-box {
         max-width: 100%;
         padding: 0;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
     }
 
     .login-logo { font-size: 2.5rem; }
